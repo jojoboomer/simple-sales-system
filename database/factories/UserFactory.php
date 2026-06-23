@@ -49,9 +49,9 @@ class UserFactory extends Factory
 
             'name' => 'Admin',
 
-            'email' => 'admin@test.com',
+            'email' => 'admin@example.com',
 
-            'password' => 'password',
+            'password' => 'admin123',
         ]);
     }
 }
