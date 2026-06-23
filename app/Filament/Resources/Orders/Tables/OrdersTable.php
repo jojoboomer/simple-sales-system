@@ -6,8 +6,14 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Schemas\Components\Section;
+use Filament\Support\Enums\Width;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrdersTable
 {
@@ -30,8 +36,17 @@ class OrdersTable
                     ->searchable(),
             ])
             ->filters([
-                //
-            ])
+                TernaryFilter::make('orders')
+                    ->default(false)
+                    ->trueLabel('All users')
+                    ->falseLabel('Mine')
+                    ->queries(
+                        true: fn(Builder $query) => $query,
+                        false: fn(Builder $query) => $query->where('user_id', auth()->id()),
+                        blank: fn(Builder $query) => $query,
+                    )
+            ], layout: FiltersLayout::AfterContentCollapsible)
+
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
