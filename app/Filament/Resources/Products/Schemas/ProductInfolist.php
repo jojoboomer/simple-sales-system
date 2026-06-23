@@ -12,7 +12,8 @@ class ProductInfolist
         return $schema
             ->components([
                 TextEntry::make('id')
-                    ->label('ID'),
+                    ->label('Product ID')
+                    ->copyable(),
                 TextEntry::make('name'),
                 TextEntry::make('description')
                     ->placeholder('-'),
@@ -25,6 +26,7 @@ class ProductInfolist
                     ->placeholder('-'),
                 TextEntry::make('updated_at')
                     ->dateTime()
+                    ->label('Last update')
                     ->placeholder('-'),
             ]);
     }
