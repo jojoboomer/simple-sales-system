@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Table(key: 'uuid', keyType: 'string', incrementing: false)]
+#[Table(key: 'id', keyType: 'string', incrementing: false)]
 #[Fillable(['name', 'description', 'price', 'stock'])]
 class Product extends Model
 {
