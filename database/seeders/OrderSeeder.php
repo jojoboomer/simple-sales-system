@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\OrderStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Order;
@@ -23,12 +24,12 @@ class OrderSeeder extends Seeder
         $products = Product::all();
 
         Order::factory()
-            ->count(10)
+            ->count(15)
             ->make()
             ->each(function ($order) use ($users, $products) {
 
                 $order->user_id = $users->random()->id;
-
+                $order->status = fake()->randomElement(OrderStatus::class);
                 $order->save();
 
                 $total = 0;
@@ -38,32 +39,22 @@ class OrderSeeder extends Seeder
                 );
 
                 foreach ($selectedProducts as $product) {
-
                     $quantity = rand(1, 5);
-
                     $subtotal = $product->price * $quantity;
 
                     OrderProduct::create([
-
                         'order_id' => $order->id,
-
                         'product_id' => $product->id,
-
                         'quantity' => $quantity,
-
                         'product_price' => $product->price,
-
                         'subtotal' => $subtotal,
-
                     ]);
 
                     $total += $subtotal;
                 }
 
                 $order->update([
-
                     'total' => $total
-
                 ]);
             });
     }

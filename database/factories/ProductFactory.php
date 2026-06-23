@@ -19,7 +19,7 @@ class ProductFactory extends Factory
     {
         return [
             'id' => fake()->uuid(),
-            'name' => $this->faker->words(3, true),
+            'name' => fake()->words(3, true),
             'description' => fake()->paragraph(3),
             'price' => fake()->randomFloat(2, 0.99, 999.99),
             'stock' => fake()->numberBetween(0, 500),
