@@ -42,7 +42,7 @@ class OrderPolicy
             return false;
         }
 
-        return $order->user_id === $user->id;
+        return $order->user_id === $user->id || $user->isAdmin();
     }
 
     /**
@@ -50,7 +50,7 @@ class OrderPolicy
      */
     public function delete(User $user, Order $order): bool
     {
-        return $order->user_id === $user->id;
+        return $order->user_id === $user->id || $user->isAdmin();
     }
 
     /**
