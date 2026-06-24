@@ -13,6 +13,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
+use Filament\Support\RawJs;
 
 class OrderForm
 {
@@ -53,16 +54,17 @@ class OrderForm
                 Select::make('user_id')
                     ->relationship('user', 'name')
                     ->disabled()
-                    ->default(fn () => auth()->id())
+                    ->default(fn() => auth()->id())
                     ->required(),
                 Repeater::make('orderProducts')
-                    ->relationship()
-                    ->label('Products')
+                    ->hiddenLabel()
+                    ->relationship('orderProducts')
+                    ->dehydrated(true)
                     ->table([
-                        TableColumn::make('product_id'),
-                        TableColumn::make('quantity'),
-                        TableColumn::make('product_price'),
-                        TableColumn::make('subtotal'),
+                        TableColumn::make('Product'),
+                        TableColumn::make('Quantity'),
+                        TableColumn::make('Price'),
+                        TableColumn::make('Subtotal'),
                     ])
                     ->schema([
                         Select::make('product_id')
@@ -87,6 +89,7 @@ class OrderForm
                         TextInput::make('quantity')
                             ->numeric()
                             ->default(1)
+                            ->minValue(1)
                             ->live()
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                 $productPrice = (float) $get('product_price');
@@ -95,17 +98,20 @@ class OrderForm
                                 self::handleTotal($get, $set);
                             }),
                         TextInput::make('product_price')
-                            ->disabled()
+                            ->readOnly()
+                            ->default(0)
+                            ->numeric()
                             ->live(),
 
                         TextInput::make('subtotal')
-                            ->disabled()
+                            ->readOnly()
+                            ->default(0)
+                            ->numeric()
                             ->live(),
                     ])
                     ->addActionLabel('New product')
                     ->columnSpan('full')
                     ->required()
-                    ->live()
                     ->afterStateUpdated(function (callable $get, callable $set) {
                         self::handleTotal($get, $set, true);
                     })
