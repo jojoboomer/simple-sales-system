@@ -3,6 +3,10 @@
 namespace App\Filament\Resources\Orders\Tables;
 
 use App\Enums\OrderStatus;
+use App\Models\Order;
+use App\Models\Product;
+use App\Services\OrderService;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -55,10 +59,20 @@ class OrdersTable
             ], layout: FiltersLayout::AfterContentCollapsible)
 
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make()
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make()->before(function (Order $record) {
+                        foreach ($record->orderProducts as $item) {
+                            $product = Product::findOrFail($item['product_id']);
+                            $quantity = $item['quantity'];
 
+                            if ($product) {
+                                $product->increment('stock', $quantity);
+                            }
+                        }
+                    })
+                ])
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
