@@ -17,15 +17,21 @@ class ViewOrder extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('back')
+                ->label('Back')
+                ->color('gray')
+                ->url(OrderResource::getUrl('index')),
             EditAction::make(),
             Action::make('confirm')
                 ->label('Confirm Order')
+                ->icon('heroicon-o-check')
                 ->color('success')
                 ->visible(fn($record) => $record->status === OrderStatus::PENDING)
                 ->requiresConfirmation()
                 ->action(function ($record) {
                     app(OrderService::class)->confirm($record);
-                })
+                }),
+
         ];
     }
 }
