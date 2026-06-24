@@ -4,16 +4,13 @@ namespace App\Filament\Resources\Orders\Pages;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
-use App\Models\Order;
-use App\Services\OrderService;
+use App\Services\InventoryService;
 use Filament\Actions\Action;
-use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\CreateRecord;
 use Override;
 use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
 use Filament\Support\Exceptions\Halt;
-use Illuminate\Validation\ValidationException;
 
 class CreateOrder extends CreateRecord
 {
@@ -56,8 +53,8 @@ class CreateOrder extends CreateRecord
     {
         try {
             $order = $this->record;
-            app(OrderService::class)->checkProductStock($order);
-            app(OrderService::class)->calculateStock($order);
+            app(InventoryService::class)->checkProductStock($order);
+            app(InventoryService::class)->calculateStock($order);
         } catch (\Exception $e) {
             $this->record = null;
 

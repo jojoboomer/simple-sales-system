@@ -4,8 +4,7 @@ namespace App\Filament\Resources\Orders\Pages;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
-use App\Services\OrderService;
-use Filament\Actions\Action;
+use App\Services\InventoryService;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
@@ -63,7 +62,7 @@ class EditOrder extends EditRecord
             ->toArray();
 
         try {
-            app(OrderService::class)
+            app(InventoryService::class)
                 ->compareStock($this->oldItemsData, $newItems);
         } catch (\DomainException $e) {
 
@@ -85,7 +84,7 @@ class EditOrder extends EditRecord
                 ->pluck('quantity', 'product_id')
                 ->toArray();
 
-            app(OrderService::class)
+            app(InventoryService::class)
                 ->calculateStockAfterUpdate($this->oldItemsData, $newItems);
         } catch (\Exception $e) {
 
