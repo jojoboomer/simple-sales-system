@@ -1,10 +1,11 @@
 <?php
 
+
 namespace App\Filament\Resources\Orders\Tables;
 
+use App\Actions\DeleteOrderAction;
 use App\Enums\OrderStatus;
 use App\Models\Order;
-use App\Models\Product;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -38,9 +39,10 @@ class OrdersTable
                 TextColumn::make('total')
                     ->money()
                     ->sortable(),
+                TextColumn::make('total_quantity'),
                 TextColumn::make('status')
                     ->badge()
-                    ->color(fn(OrderStatus $state) => $state->color()),
+                    ->color(fn (OrderStatus $state) => $state->color()),
             ])
             ->filters([
                 TernaryFilter::make('orders')
@@ -48,27 +50,22 @@ class OrdersTable
                     ->trueLabel('All users')
                     ->falseLabel('Mine')
                     ->queries(
-                        true: fn(Builder $query) => $query,
-                        false: fn(Builder $query) => $query->where('user_id', auth()->id()),
-                        blank: fn(Builder $query) => $query,
-                    )
+                        true: fn (Builder $query) => $query,
+                        false: fn (Builder $query) => $query->where('user_id', auth()->id()),
+                        blank: fn (Builder $query) => $query,
+                    ),
             ], layout: FiltersLayout::AfterContentCollapsible)
 
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),
-                    DeleteAction::make()->before(function (Order $record) {
-                        foreach ($record->orderProducts as $item) {
-                            $product = Product::findOrFail($item['product_id']);
-                            $quantity = $item['quantity'];
-
-                            if ($product) {
-                                $product->increment('stock', $quantity);
-                            }
-                        }
-                    })
-                ])
+                    DeleteAction::make()
+                        ->action(function (Order $record) {
+                            app(DeleteOrderAction::class)->execute($record);
+                        })
+                        ->failureNotificationTitle('Error deleting order'),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
