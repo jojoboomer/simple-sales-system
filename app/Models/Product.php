@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,13 +18,9 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory, HasUuids;
 
-    protected function price(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value / 100,
-            set: fn($value) => $value * 100
-        );
-    }
+    protected $casts = [
+        'price' => MoneyCast::class,
+    ];
 
     public function orderProducts(): HasMany
     {

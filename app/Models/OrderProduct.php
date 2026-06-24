@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyCast;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,21 +21,10 @@ class OrderProduct extends Model
     /** @use HasFactory<\Database\Factories\OrderProductFactory> */
     use HasFactory;
 
-    protected function product_price(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value / 100,
-            set: fn($value) => $value * 100
-        );
-    }
-
-    protected function subtotal(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => $value / 100,
-            set: fn($value) => $value * 100
-        );
-    }
+    protected $casts = [
+        'product_price' => MoneyCast::class,
+        'subtotal' => MoneyCast::class,
+    ];
 
     public function order(): BelongsTo
     {
