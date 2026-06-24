@@ -7,7 +7,6 @@ use Filament\Schemas\Schema;
 
 class ProductForm
 {
-    //TODO: mask decimal
     public static function configure(Schema $schema): Schema
     {
         return $schema
