@@ -14,15 +14,23 @@ use Illuminate\Support\Facades\Log;
 class OrderService
 {
 
-    public function updateTotal(Order $order): void
+    /**
+     * Confirm an order
+     */
+    public function confirm(Order $order): Order
     {
-        $subtotal = $order->orderProducts->sum('subtotal');
+        if ($order->status === OrderStatus::COMPLETED) {
+            throw new \Exception('Order already confirmed');
+        }
 
-        $total = $subtotal;
+        return DB::transaction(function () use ($order) {
 
-        $order->update([
-            'total' => $total,
-        ]);
+            $order->update([
+                'status' => OrderStatus::COMPLETED,
+            ]);
+
+            return $order;
+        });
     }
 
     /**
