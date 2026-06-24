@@ -20,6 +20,7 @@ class Product extends Model
 
     protected $casts = [
         'price' => MoneyCast::class,
+        'stock' => 'integer',
     ];
 
     public function orderProducts(): HasMany
