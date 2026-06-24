@@ -1,58 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Simple Sales System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de gestión de ventas construido con **Laravel 13** + **Filament 5**.
 
-## About Laravel
+## Requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.5+
+- Composer
+- Node.js 18+
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalación
 
 ```bash
-composer require laravel/boost --dev
+# Clonar el repositorio
+git clone <repo-url> simple-sales-system
+cd simple-sales-system
 
-php artisan boost:install
+# Instalar dependencias PHP
+composer install
+
+# Instalar dependencias frontend
+yarn install
+
+# Configurar entorno
+cp .env.example .env
+php artisan key:generate
+
+# Migrar y seedear la base de datos
+php artisan migrate --seed
+
+# Compilar assets
+yarn build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Inicio rápido
 
-## Contributing
+```bash
+php artisan serve
+# o usando Vite para desarrollo frontend:
+yarn dev
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Acceder a `http://localhost:8000/admin`
 
-## Code of Conduct
+## Credenciales por defecto
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Rol    | Email                 | Contraseña   |
+|--------|-----------------------|--------------|
+| Admin  | admin@example.com     | admin123     |
+| User   | example@example.com   | example123   |
 
-## Security Vulnerabilities
+## Arquitectura
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+Filament Resource  →  Page  →  Service  →  Eloquent Model
+```
 
-## License
+- **Resources**: capa delgada que delega en schemas/tables/pages.
+- **Pages**: orquestan el flujo e invocan servicios.
+- **Services**: lógica de negocio (ej: `InventoryService`, `OrderService`).
+- **Models**: relaciones, casts y helpers simples — sin lógica de negocio.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Módulos
+
+### Productos
+- CRUD completo con validación (`name`, `price ≥ 0`, `stock ≥ 0`).
+- Precios almacenados como enteros (centavos) vía `MoneyCast`.
+- IDs con UUID.
+
+### Órdenes
+- Creación con ítems dinámicos (Repeater).
+- Estados: `pending`, `completed`, `refunded`.
+- Políticas por rol (admin/user).
+
+## Reglas de negocio
+
+1. Validar stock disponible antes de crear/editar una orden.
+2. Calcular subtotal = cantidad × precio unitario.
+3. Calcular total = suma de subtotales.
+4. Descontar stock al confirmar la orden.
+5. Todo dentro de transacciones de base de datos.
+
+## Tests
+
+```bash
+php artisan test
+```
+
+## Stack
+
+- **Laravel 13** + SQLite
+- **Filament 5** (Admin Panel)
+- **TailwindCSS 4** + **Vite**
+- **Pest** (testing)
