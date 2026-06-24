@@ -21,8 +21,8 @@ class ProductFactory extends Factory
             'id' => fake()->uuid(),
             'name' => fake()->words(3, true),
             'description' => fake()->paragraph(3),
-            'price' => fake()->randomFloat(2, 0.99, 999.99),
-            'stock' => fake()->numberBetween(0, 500),
+            'price' => fake()->numberBetween(50, 5000),
+            'stock' => fake()->numberBetween(0, 100),
         ];
     }
 }
