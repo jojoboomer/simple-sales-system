@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['total', 'status'])]
+#[Fillable(['user_id', 'total', 'status'])]
 class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
