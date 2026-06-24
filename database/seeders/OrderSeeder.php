@@ -29,7 +29,7 @@ class OrderSeeder extends Seeder
             ->each(function ($order) use ($users, $products) {
 
                 $order->user_id = $users->random()->id;
-                $order->status = fake()->randomElement(OrderStatus::class);
+                $order->status = fake()->randomElement(OrderStatus::cases())->value;
                 $order->save();
 
                 $total = 0;

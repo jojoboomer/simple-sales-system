@@ -73,7 +73,7 @@ class OrderForm
                     ])
                     ->schema([
                         Select::make('product_id')
-                            ->label('Producto')
+                            ->label('Product')
                             ->relationship('product', 'name')
                             ->searchable()
                             ->searchDebounce(300)

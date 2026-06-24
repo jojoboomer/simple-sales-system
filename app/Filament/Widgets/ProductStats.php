@@ -6,9 +6,9 @@ use App\Models\Product as ModelsProduct;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
-class Product extends StatsOverviewWidget
+class ProductStats extends StatsOverviewWidget
 {
-        protected function getHeading(): ?string
+    protected function getHeading(): ?string
     {
         return 'Product Analytics';
     }
