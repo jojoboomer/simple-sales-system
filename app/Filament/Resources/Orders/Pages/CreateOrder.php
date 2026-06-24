@@ -4,20 +4,26 @@ namespace App\Filament\Resources\Orders\Pages;
 
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
+use App\Models\Order;
 use App\Services\OrderService;
 use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\CreateRecord;
-use Filament\Support\Facades\FilamentView;
 use Override;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\HtmlString;
+use Filament\Notifications\Notification;
+use Filament\Support\Exceptions\Halt;
+use Illuminate\Validation\ValidationException;
 
 class CreateOrder extends CreateRecord
 {
-
     protected static string $resource = OrderResource::class;
 
     protected static bool $canCreateAnother = false;
+
+    protected ?bool $hasDatabaseTransactions = true;
+
+    public string $status = 'pending';
 
     protected function getCreatedNotificationTitle(): ?string
     {
@@ -38,19 +44,52 @@ class CreateOrder extends CreateRecord
         ");
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['status'] = $this->status ?? OrderStatus::PENDING->value;
+        $data['user_id'] = auth()->id();
+
+        return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+        try {
+            $order = $this->record;
+            app(OrderService::class)->checkProductStock($order);
+            app(OrderService::class)->calculateStock($order);
+        } catch (\Exception $e) {
+            $this->record = null;
+
+            Notification::make()
+                ->title('Error calculating stock')
+                ->body($e->getMessage())
+                ->danger()
+                ->send();
+
+            throw (new Halt())->rollBackDatabaseTransaction();
+        }
+    }
+
     #[Override]
     protected function getFormActions(): array
     {
         return [
-            $this->getCreateFormAction()
-                ->label('Save as Pending')
-                ->color('warning')
-                ->action(fn() => app(OrderService::class)->create($this->form->getState())),
+            Action::make('save_as_pending')
+                ->label('Guardar (Pendiente)')
+                ->color('gray')
+                ->action(function () {
+                    $this->status = OrderStatus::PENDING->value;
+                    $this->create(another: false);
+                }),
 
-            $this->getCreateFormAction()
-                ->label('Confirm order')
+            Action::make('save_as_completed')
+                ->label('Finalizar (Completado)')
                 ->color('success')
-                ->action(fn() => app(OrderService::class)->create([...$this->form->getState(), 'status' => OrderStatus::COMPLETED])),
+                ->action(function () {
+                    $this->status = OrderStatus::COMPLETED->value;
+                    $this->create(another: false);
+                }),
 
             $this->getCancelFormAction(),
         ];
