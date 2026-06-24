@@ -3,13 +3,11 @@
 namespace Database\Seeders;
 
 use App\Enums\OrderStatus;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\User;
-
+use Illuminate\Database\Seeder;
 
 class OrderSeeder extends Seeder
 {
@@ -54,7 +52,7 @@ class OrderSeeder extends Seeder
                 }
 
                 $order->update([
-                    'total' => $total
+                    'total' => $total,
                 ]);
             });
     }

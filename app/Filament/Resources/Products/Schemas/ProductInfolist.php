@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Infolists\Components\TextEntry;

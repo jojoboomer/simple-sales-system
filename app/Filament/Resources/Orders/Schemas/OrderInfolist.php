@@ -1,12 +1,12 @@
 <?php
 
+
 namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\OrderStatus;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class OrderInfolist
@@ -18,7 +18,7 @@ class OrderInfolist
             ->components([
                 TextEntry::make('total')
                     ->money(),
-                TextEntry::make('status')->badge()->color(fn(OrderStatus $state) => $state->color()),
+                TextEntry::make('status')->badge()->color(fn (OrderStatus $state) => $state->color()),
                 TextEntry::make('user.name')
                     ->label('User'),
                 TextEntry::make('created_at')
@@ -43,8 +43,8 @@ class OrderInfolist
                         TextEntry::make('product.name')->label('Producto'),
                         TextEntry::make('quantity')->numeric(),
                         TextEntry::make('product_price')->money(),
-                        TextEntry::make('subtotal')->money()
-                    ])
+                        TextEntry::make('subtotal')->money(),
+                    ]),
             ]);
     }
 }

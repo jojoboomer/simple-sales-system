@@ -22,7 +22,7 @@ class Orders extends StatsOverviewWidget
         return [
             Stat::make(' Orders of Today ', Order::whereDate('created_at', Carbon::today())->count()),
             Stat::make('Orders not Processed', Order::where('status', OrderStatus::PENDING)->count()),
-            Stat::make('Today\'s Revenue', '$' . number_format(Order::whereDate('created_at', Carbon::today())->sum('total'), 2))
+            Stat::make('Today\'s Revenue', '$'.number_format(Order::whereDate('created_at', Carbon::today())->sum('total'), 2))
                 ->description('Revenue generated today')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->chart([12, 15, 18, 14, 22, 25, 30])

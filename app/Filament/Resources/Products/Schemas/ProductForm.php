@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Forms\Components\TextInput;
@@ -11,9 +12,6 @@ class ProductForm
     {
         return $schema
             ->components([
-                // TextInput::make('id')
-                //     ->label('ID')
-                //     ->required(),
                 TextInput::make('name')
                     ->required(),
                 TextInput::make('description'),
@@ -23,7 +21,7 @@ class ProductForm
                     ->prefix('$')
                     ->required(),
                 TextInput::make('stock')
-                ->numeric()
+                    ->numeric()
                     ->required()
                     ->minValue(0)
                     ->default(0),

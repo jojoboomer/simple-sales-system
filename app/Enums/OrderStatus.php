@@ -6,7 +6,7 @@ enum OrderStatus: string
 {
     case PENDING = 'pending';
     case COMPLETED = 'completed';
-    case REFUNDED  = 'refunded';
+    case REFUNDED = 'refunded';
 
     public function label(): string
     {

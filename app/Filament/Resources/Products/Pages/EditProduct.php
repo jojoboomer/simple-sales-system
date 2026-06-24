@@ -3,9 +3,7 @@
 namespace App\Filament\Resources\Products\Pages;
 
 use App\Filament\Resources\Products\ProductResource;
-use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
 use Override;
 
@@ -39,6 +37,6 @@ class EditProduct extends EditRecord
     #[Override]
     protected function getRedirectUrl(): ?string
     {
-        return $this->getResource()::getUrl('index');;
+        return $this->getResource()::getUrl('index');
     }
 }

@@ -20,7 +20,7 @@ class ProductStats extends StatsOverviewWidget
 
         return [
             Stat::make('Total Products', ModelsProduct::count()),
-            Stat::make('Out of Stock', "{$outOfStockCount}")
+            Stat::make('Out of Stock', "{$outOfStockCount}"),
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources\Products\Tables;
 
 use Filament\Actions\Action;
@@ -40,7 +41,7 @@ class ProductsTable
                     ->numeric()
                     ->sortable()
                     ->iconPosition(IconPosition::After)
-                    ->icon(fn(int $state): ?string => match (true) {
+                    ->icon(fn (int $state): ?string => match (true) {
                         $state <= 50 => 'heroicon-o-exclamation-triangle',
                         default => '',
                     })
@@ -58,14 +59,14 @@ class ProductsTable
             ->filters([
                 //
             ])
-            ->recordUrl(fn($record) => null)
+            ->recordUrl(fn ($record) => null)
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make()->modalFooterActions([
                         Action::make('edit')
                             ->label('Edit product')
                             ->color('primary')
-                            ->url(fn($record) => route('filament.admin.resources.products.edit', $record)),
+                            ->url(fn ($record) => route('filament.admin.resources.products.edit', $record)),
 
                         Action::make('close')
                             ->label('Cancel')
