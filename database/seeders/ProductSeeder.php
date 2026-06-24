@@ -13,6 +13,32 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        Product::factory()->count(20)->create();
+        Product::factory()->create([
+            'name' => 'Laptop',
+            'description' => 'Description for Laptop',
+            'price' => 800,
+            'stock' => 10,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Mouse',
+            'description' => 'Description for Mouse',
+            'price' => 25,
+            'stock' => 5,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Keyboard',
+            'description' => 'Description for Keyboard',
+            'price' => 30,
+            'stock' => 3,
+        ]);
+
+        Product::factory()->create([
+            'name' => 'Earphones',
+            'description' => 'Description for Earphones',
+            'price' => 15,
+            'stock' => 20,
+        ]);
     }
 }
