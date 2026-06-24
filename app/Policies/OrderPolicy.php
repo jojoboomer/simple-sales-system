@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\OrderStatus;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -37,6 +38,10 @@ class OrderPolicy
      */
     public function update(User $user, Order $order): bool
     {
+        if ($order->status !== OrderStatus::PENDING) {
+            return false;
+        }
+
         return $order->user_id === $user->id;
     }
 
