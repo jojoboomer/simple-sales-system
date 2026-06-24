@@ -40,5 +40,12 @@ class ProductSeeder extends Seeder
             'price' => 15,
             'stock' => 20,
         ]);
+
+        Product::factory()->create([
+            'name' => 'Monitor',
+            'description' => 'Description for Monitor',
+            'price' => 150,
+            'stock' => 0,
+        ]);
     }
 }
