@@ -99,38 +99,6 @@ class EditOrder extends EditRecord
         }
     }
 
-    /**
-     * Custom creation logic for the order, using the OrderService.
-     *
-     */
-    protected function handleEdit(string $status): void
-    {
-        try {
-            $record = $this->record;
-            $data = $this->form->getState();
-            $data['status'] = $status;
-            $data['user_id'] = auth()->id();
-
-            $order = app(OrderService::class)->update($record, $data);
-
-            Notification::make()
-                ->title('Order updated successfully')
-                ->body("Order #{$order->id} has been updated to {$order->status->label()}.")
-                ->success()
-                ->send();
-
-            $this->redirect(OrderResource::getUrl('index'));
-        } catch (\Exception $e) {
-            report($e);
-            Notification::make()
-                ->danger()
-                ->title('Service Error')
-                ->body($e->getMessage())
-                ->send();
-            $this->halt();
-        }
-    }
-
     #[Override]
     protected function getFormActions(): array
     {
