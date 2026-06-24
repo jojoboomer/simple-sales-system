@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources\Orders;
 
 use App\Filament\Resources\Orders\Pages\CreateOrder;
@@ -15,6 +16,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderResource extends Resource
 {
@@ -42,6 +44,13 @@ class OrderResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['user', 'orderProducts.product'])
+            ->withSum('orderProducts', 'quantity');
     }
 
     public static function getPages(): array

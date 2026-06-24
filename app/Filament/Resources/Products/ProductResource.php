@@ -1,11 +1,11 @@
 <?php
 
+
 namespace App\Filament\Resources\Products;
 
 use App\Filament\Resources\Products\Pages\CreateProduct;
 use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ListProducts;
-use App\Filament\Resources\Products\Pages\ViewProduct;
 use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Schemas\ProductInfolist;
 use App\Filament\Resources\Products\Tables\ProductsTable;
@@ -16,11 +16,12 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArchiveBox;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema

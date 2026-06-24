@@ -1,29 +1,25 @@
 <?php
 
+
 namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\OrderStatus;
 use App\Models\Product;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
-use Filament\Support\RawJs;
 
 class OrderForm
 {
     /**
      * Calculate and set order total based on provided get/set callables.
      *
-     * @param callable $get Receives a path and returns the state at that path
-     * @param callable $set Receives a path and a value to set
-     * @param bool $isRepeaterLevel Whether the callables are scoped to repeater level
-     * @return void
+     * @param  callable  $get  Receives a path and returns the state at that path
+     * @param  callable  $set  Receives a path and a value to set
+     * @param  bool  $isRepeaterLevel  Whether the callables are scoped to repeater level
      */
     public static function handleTotal(callable $get, callable $set, bool $isRepeaterLevel = false): void
     {
@@ -43,7 +39,7 @@ class OrderForm
     /**
      * Configure the order form schema.
      *
-     * @param Schema $schema The schema instance to configure
+     * @param  Schema  $schema  The schema instance to configure
      * @return Schema The configured schema
      */
     public static function configure(Schema $schema): Schema
@@ -54,16 +50,15 @@ class OrderForm
                 Select::make('user_id')
                     ->relationship('user', 'name')
                     ->disabled()
-                    ->default(fn() => auth()->id())
+                    ->default(fn () => auth()->id())
                     ->required(),
                 Select::make('status')
-                ->label('Order Status')
+                    ->label('Order Status')
                     ->options(OrderStatus::class)
                     ->default(OrderStatus::PENDING)
                     ->required(),
                 Repeater::make('orderProducts')
                     ->hiddenLabel()
-                    ->relationship('orderProducts')
                     ->dehydrated(true)
                     ->table([
                         TableColumn::make('Product'),
@@ -74,7 +69,7 @@ class OrderForm
                     ->schema([
                         Select::make('product_id')
                             ->label('Product')
-                            ->relationship('product', 'name')
+                            ->options(Product::pluck('name', 'id'))
                             ->searchable()
                             ->searchDebounce(300)
                             ->loadingMessage('Loading products...')
@@ -119,7 +114,7 @@ class OrderForm
                     ->required()
                     ->afterStateUpdated(function (callable $get, callable $set) {
                         self::handleTotal($get, $set, true);
-                    })
+                    }),
 
             ]);
     }
