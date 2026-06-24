@@ -14,7 +14,7 @@ class MoneyCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return $value / 100;
+        return $value !== null ? $value / 100 : null;
     }
 
     /**
@@ -24,6 +24,6 @@ class MoneyCast implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        return $value * 100;
+        return $value !== null ? $value * 100 : null;
     }
 }
