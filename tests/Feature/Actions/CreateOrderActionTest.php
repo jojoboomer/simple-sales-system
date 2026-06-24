@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Actions\CreateOrderAction;
 use App\Enums\OrderStatus;
 use App\Exceptions\InsufficientStockException;

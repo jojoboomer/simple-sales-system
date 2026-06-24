@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Enums\UserRole;
 
 test('user role enum has expected cases', function () {

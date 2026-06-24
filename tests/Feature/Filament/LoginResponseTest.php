@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Filament\Pages\Auth\LoginResponse;
 use App\Models\User;
 use Illuminate\Http\Request;

@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Enums\OrderStatus;
 
 test('order status returns correct labels', function () {

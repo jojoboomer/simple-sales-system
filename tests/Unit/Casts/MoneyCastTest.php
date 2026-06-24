@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Casts\MoneyCast;
 use App\Models\Product;
 
