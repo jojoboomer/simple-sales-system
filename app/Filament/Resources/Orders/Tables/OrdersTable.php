@@ -2,7 +2,9 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
+use App\Enums\OrderStatus;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -21,19 +23,24 @@ class OrdersTable
     {
         return $table
             ->columns([
-                TextColumn::make('total')
-                    ->numeric()
+                TextColumn::make('id')
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->isoDateTime()
+                    ->sortable(),
                 TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->since()
+                    ->dateTimeTooltip()
+                    ->sortable(),
                 TextColumn::make('user.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('total')
+                    ->money()
+                    ->sortable(),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(OrderStatus $state) => $state->color()),
             ])
             ->filters([
                 TernaryFilter::make('orders')
@@ -50,6 +57,8 @@ class OrdersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                DeleteAction::make()
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
