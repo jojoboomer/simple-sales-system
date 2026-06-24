@@ -48,6 +48,12 @@ class EditOrder extends EditRecord
         ");
     }
 
+    #[Override]
+    protected function getRedirectUrl(): ?string
+    {
+        return $this->getResource()::getUrl('index');;
+    }
+
     protected array $oldItemsData = [];
 
     protected function beforeSave(): void
