@@ -8,6 +8,7 @@ use App\Services\OrderService;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\HtmlString;
 
 class ViewOrder extends ViewRecord
 {

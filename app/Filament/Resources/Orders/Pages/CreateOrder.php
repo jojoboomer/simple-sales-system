@@ -30,7 +30,7 @@ class CreateOrder extends CreateRecord
 
         return new HtmlString("
             <div class='flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 mt-1'>
-                <span>Monto acumulado:</span>
+                <span>Total amount:</span>
                 <span class='text-base font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 px-2.5 py-0.5 rounded-full ring-1 ring-primary-600/10'>
                     $" . number_format((float) $total, 2) . "
                 </span>
