@@ -23,14 +23,15 @@ class ViewOrder extends ViewRecord
                 ->url(OrderResource::getUrl('index')),
             EditAction::make(),
             Action::make('confirm')
-                ->label('Confirm Order')
-                ->icon('heroicon-o-check')
+                ->label('Mark as complete')
                 ->color('success')
                 ->visible(fn($record) => $record->status === OrderStatus::PENDING)
                 ->requiresConfirmation()
                 ->action(function ($record) {
                     app(OrderService::class)->confirm($record);
-                }),
+                })
+                ->successNotificationTitle('Order confirmed successfully')
+                ->successRedirectUrl(fn() => route('filament.admin.resources.orders.index')),
 
         ];
     }

@@ -26,6 +26,7 @@ class EditOrder extends EditRecord
     {
         return [
             ViewAction::make(),
+            DeleteAction::make(),
         ];
     }
 
@@ -135,18 +136,8 @@ class EditOrder extends EditRecord
     {
         return [
             $this->getSaveFormAction()
-                ->label('Actualizar Orden')
+                ->label('Save Changes')
                 ->color('primary'),
-            $this->getSaveFormAction()
-                ->name('save_as_completed')
-                ->label('Finalizar (Completado)')
-                ->color('success')
-                ->submit(null)
-                ->action(function () {
-                    $this->status = OrderStatus::COMPLETED->value;
-                    $this->save();
-                }),
-
             $this->getCancelFormAction(),
         ];
     }

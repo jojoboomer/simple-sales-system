@@ -56,6 +56,11 @@ class OrderForm
                     ->disabled()
                     ->default(fn() => auth()->id())
                     ->required(),
+                Select::make('status')
+                ->label('Order Status')
+                    ->options(OrderStatus::class)
+                    ->default(OrderStatus::PENDING)
+                    ->required(),
                 Repeater::make('orderProducts')
                     ->hiddenLabel()
                     ->relationship('orderProducts')

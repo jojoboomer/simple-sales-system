@@ -75,19 +75,19 @@ class CreateOrder extends CreateRecord
     protected function getFormActions(): array
     {
         return [
-            Action::make('save_as_pending')
-                ->label('Guardar (Pendiente)')
-                ->color('gray')
+            Action::make('save_as_completed')
+                ->label('Save and Complete')
+                ->color('primary')
                 ->action(function () {
-                    $this->status = OrderStatus::PENDING->value;
+                    $this->status = OrderStatus::COMPLETED->value;
                     $this->create(another: false);
                 }),
 
-            Action::make('save_as_completed')
-                ->label('Finalizar (Completado)')
-                ->color('success')
+            Action::make('save_as_pending')
+                ->label('Save as Pending')
+                ->color('gray')
                 ->action(function () {
-                    $this->status = OrderStatus::COMPLETED->value;
+                    $this->status = OrderStatus::PENDING->value;
                     $this->create(another: false);
                 }),
 
