@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
+use App\Actions\ConfirmOrderAction;
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
-use App\Services\OrderService;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
-use Illuminate\Support\HtmlString;
 
 class ViewOrder extends ViewRecord
 {
@@ -25,13 +24,13 @@ class ViewOrder extends ViewRecord
             Action::make('confirm')
                 ->label('Mark as complete')
                 ->color('success')
-                ->visible(fn($record) => $record->status === OrderStatus::PENDING)
+                ->visible(fn ($record) => $record->status === OrderStatus::PENDING)
                 ->requiresConfirmation()
                 ->action(function ($record) {
-                    app(OrderService::class)->confirm($record);
+                    app(ConfirmOrderAction::class)->execute($record);
                 })
                 ->successNotificationTitle('Order confirmed successfully')
-                ->successRedirectUrl(fn() => route('filament.admin.resources.orders.index')),
+                ->successRedirectUrl(fn () => route('filament.admin.resources.orders.index')),
 
         ];
     }

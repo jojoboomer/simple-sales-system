@@ -1,25 +1,22 @@
 <?php
 
-namespace App\Services;
+
+namespace App\Actions;
 
 use App\Enums\OrderStatus;
 use App\Models\Order;
+use DomainException;
 use Illuminate\Support\Facades\DB;
 
-class OrderService
+class ConfirmOrderAction
 {
-
-    /**
-     * Confirm an order
-     */
-    public function confirm(Order $order): Order
+    public function execute(Order $order): Order
     {
         if ($order->status === OrderStatus::COMPLETED) {
-            throw new \Exception('Order already confirmed');
+            throw new DomainException('Order is already completed');
         }
 
         return DB::transaction(function () use ($order) {
-
             $order->update([
                 'status' => OrderStatus::COMPLETED,
             ]);
