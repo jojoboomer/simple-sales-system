@@ -1,10 +1,11 @@
 <?php
 
+
 namespace App\Filament\Resources\Orders\Pages;
 
-use App\Enums\OrderStatus;
+use App\Actions\UpdateOrderAction;
 use App\Filament\Resources\Orders\OrderResource;
-use App\Services\InventoryService;
+use App\Models\OrderProduct;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Notifications\Notification;
@@ -18,8 +19,6 @@ class EditOrder extends EditRecord
     protected static string $resource = OrderResource::class;
 
     protected ?bool $hasDatabaseTransactions = true;
-
-    public string $status = 'pending';
 
     protected function getHeaderActions(): array
     {
@@ -42,65 +41,52 @@ class EditOrder extends EditRecord
             <div class='flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 mt-1'>
                 <span>Total amount:</span>
                 <span class='text-base font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 px-2.5 py-0.5 rounded-full ring-1 ring-primary-600/10'>
-                    $" . number_format((float) $total, 2) . "
+                    $".number_format((float) $total, 2).'
                 </span>
             </div>
-        ");
+        ');
     }
 
     #[Override]
     protected function getRedirectUrl(): ?string
     {
-        return $this->getResource()::getUrl('index');;
+        return $this->getResource()::getUrl('index');
     }
 
-    protected array $oldItemsData = [];
-
-    protected function beforeSave(): void
+    protected function mutateFormDataBeforeFill(array $data): array
     {
-        $this->oldItemsData = $this->record
-            ->orderProducts
-            ->pluck('quantity', 'product_id')
+        $data['orderProducts'] = $this->record->orderProducts
+            ->map(fn (OrderProduct $item) => [
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+                'product_price' => $item->product_price,
+                'subtotal' => $item->subtotal,
+            ])
             ->toArray();
 
-        $newItems = collect($this->form->getState()['orderProducts'] ?? [])
-            ->pluck('quantity', 'product_id')
-            ->toArray();
+        return $data;
+    }
 
-        try {
-            app(InventoryService::class)
-                ->compareStock($this->oldItemsData, $newItems);
-        } catch (\DomainException $e) {
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $data['total'] = 0;
 
-            Notification::make()
-                ->title('Stock validation failed')
-                ->body($e->getMessage())
-                ->danger()
-                ->send();
-
-            throw (new Halt())->rollBackDatabaseTransaction();
-        }
+        return $data;
     }
 
     protected function afterSave(): void
     {
         try {
-            $order = $this->record->fresh('orderProducts');
-            $newItems = $order->orderProducts
-                ->pluck('quantity', 'product_id')
-                ->toArray();
-
-            app(InventoryService::class)
-                ->calculateStockAfterUpdate($this->oldItemsData, $newItems);
-        } catch (\Exception $e) {
-
+            $newItems = $this->form->getState()['orderProducts'] ?? [];
+            app(UpdateOrderAction::class)->execute($this->record, $newItems);
+        } catch (\Throwable $e) {
             Notification::make()
-                ->title('Error calculating stock')
+                ->title('Error updating order')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
 
-            throw (new Halt())->rollBackDatabaseTransaction();
+            throw (new Halt)->rollBackDatabaseTransaction();
         }
     }
 

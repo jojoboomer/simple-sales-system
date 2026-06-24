@@ -2,15 +2,15 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
+use App\Actions\CreateOrderAction;
 use App\Enums\OrderStatus;
 use App\Filament\Resources\Orders\OrderResource;
-use App\Services\InventoryService;
 use Filament\Actions\Action;
-use Filament\Resources\Pages\CreateRecord;
-use Override;
-use Illuminate\Support\HtmlString;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\CreateRecord;
 use Filament\Support\Exceptions\Halt;
+use Illuminate\Support\HtmlString;
+use Override;
 
 class CreateOrder extends CreateRecord
 {
@@ -35,16 +35,17 @@ class CreateOrder extends CreateRecord
             <div class='flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 mt-1'>
                 <span>Total amount:</span>
                 <span class='text-base font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 px-2.5 py-0.5 rounded-full ring-1 ring-primary-600/10'>
-                    $" . number_format((float) $total, 2) . "
+                    $".number_format((float) $total, 2).'
                 </span>
             </div>
-        ");
+        ');
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['status'] = $this->status ?? OrderStatus::PENDING->value;
         $data['user_id'] = auth()->id();
+        $data['total'] = 0;
 
         return $data;
     }
@@ -52,19 +53,18 @@ class CreateOrder extends CreateRecord
     protected function afterCreate(): void
     {
         try {
-            $order = $this->record;
-            app(InventoryService::class)->checkProductStock($order);
-            app(InventoryService::class)->calculateStock($order);
-        } catch (\Exception $e) {
+            $items = $this->form->getState()['orderProducts'] ?? [];
+            app(CreateOrderAction::class)->execute($this->record, $items);
+        } catch (\Throwable $e) {
             $this->record = null;
 
             Notification::make()
-                ->title('Error calculating stock')
+                ->title('Error creating order')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
 
-            throw (new Halt())->rollBackDatabaseTransaction();
+            throw (new Halt)->rollBackDatabaseTransaction();
         }
     }
 
