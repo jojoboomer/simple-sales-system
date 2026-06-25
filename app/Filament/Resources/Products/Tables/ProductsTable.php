@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Products\Tables;
 
 use Filament\Actions\Action;
@@ -66,6 +65,7 @@ class ProductsTable
                         Action::make('edit')
                             ->label('Edit product')
                             ->color('primary')
+                            ->visible(fn () => auth()->user()->isAdmin())
                             ->url(fn ($record) => route('filament.admin.resources.products.edit', $record)),
 
                         Action::make('close')
