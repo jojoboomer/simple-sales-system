@@ -7,12 +7,17 @@ use App\Exceptions\ProductNotFoundException;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class UpdateOrderAction
 {
     public function execute(Order $order, array $newItems): Order
     {
+        if (empty($newItems)) {
+            throw new \InvalidArgumentException('Order must contain at least one product.');
+        }
+
         $oldItems = $order->orderProducts->keyBy('product_id');
 
         $productIds = array_unique(
@@ -86,9 +91,9 @@ class UpdateOrderAction
 
     private function removeDeletedItems(
         Order $order,
-        $oldItems,
+        Collection $oldItems,
         array $processedProductIds,
-        $products
+        Collection $products
     ): void {
         $removedProductIds = $oldItems->keys()->diff(collect($processedProductIds));
 

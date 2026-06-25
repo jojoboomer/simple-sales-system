@@ -12,6 +12,10 @@ class CreateOrderAction
 {
     public function execute(Order $order, array $items): Order
     {
+        if (empty($items)) {
+            throw new \InvalidArgumentException('Order must contain at least one product.');
+        }
+
         $productIds = array_unique(array_column($items, 'product_id'));
         $products = Product::findMany($productIds)->keyBy('id');
 

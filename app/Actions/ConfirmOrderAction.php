@@ -1,12 +1,10 @@
 <?php
 
-
 namespace App\Actions;
 
 use App\Enums\OrderStatus;
 use App\Models\Order;
 use DomainException;
-use Illuminate\Support\Facades\DB;
 
 class ConfirmOrderAction
 {
@@ -16,12 +14,8 @@ class ConfirmOrderAction
             throw new DomainException('Order is already completed');
         }
 
-        return DB::transaction(function () use ($order) {
-            $order->update([
-                'status' => OrderStatus::COMPLETED,
-            ]);
+        $order->update(['status' => OrderStatus::COMPLETED]);
 
-            return $order;
-        });
+        return $order->fresh();
     }
 }
