@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['user_id', 'total', 'status'])]
@@ -25,14 +24,6 @@ class Order extends Model
             'status' => OrderStatus::class,
             'total' => MoneyCast::class,
         ];
-    }
-
-    public function products(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'order_products')
-            ->using(OrderProduct::class)
-            ->withPivot(['quantity', 'product_price', 'subtotal'])
-            ->withTimestamps();
     }
 
     public function orderProducts(): HasMany
