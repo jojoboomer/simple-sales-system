@@ -2,6 +2,13 @@
 
 Sistema de gestión de ventas construido con **Laravel 13** + **Filament 5**.
 
+## Stack
+
+- **Laravel 13**
+- **Filament 5**
+- **SQLite**
+- **Pest**
+
 ## Requisitos
 
 - PHP 8.5+
@@ -86,9 +93,7 @@ Filament Resource  →  Page  →  Action  →  Eloquent Model
 php artisan test
 ```
 
-## Stack
-
-- **Laravel 13** + SQLite
-- **Filament 5** (Admin Panel)
-- **TailwindCSS 4** + **Vite**
-- **Pest** (testing)
+## Roadmap
+- [ ] Dockerizar la app
+- [ ] Exporner API
+- [ ] Crear tema custom
