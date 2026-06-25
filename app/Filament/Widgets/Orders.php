@@ -19,13 +19,16 @@ class Orders extends StatsOverviewWidget
 
     protected function getStats(): array
     {
+        $todayOrders = Order::whereDate('created_at', Carbon::today())->count();
+        $pendingOrders = Order::where('status', OrderStatus::PENDING)->count();
+        $todayRevenue = Order::whereDate('created_at', Carbon::today())->sum('total');
+
         return [
-            Stat::make(' Orders of Today ', Order::whereDate('created_at', Carbon::today())->count()),
-            Stat::make('Orders not Processed', Order::where('status', OrderStatus::PENDING)->count()),
-            Stat::make('Today\'s Revenue', '$'.number_format(Order::whereDate('created_at', Carbon::today())->sum('total'), 2))
+            Stat::make('Orders of Today', $todayOrders),
+            Stat::make('Orders not Processed', $pendingOrders),
+            Stat::make('Today\'s Revenue', '$'.number_format($todayRevenue, 2))
                 ->description('Revenue generated today')
                 ->descriptionIcon('heroicon-m-banknotes')
-                ->chart([12, 15, 18, 14, 22, 25, 30])
                 ->color('success'),
         ];
     }
