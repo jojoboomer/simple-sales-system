@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\OrderStatus;
@@ -21,7 +20,7 @@ class OrderForm
      * @param  callable  $set  Receives a path and a value to set
      * @param  bool  $isRepeaterLevel  Whether the callables are scoped to repeater level
      */
-    public static function handleTotal(callable $get, callable $set, bool $isRepeaterLevel = false): void
+    public static function calculateFormTotal(callable $get, callable $set, bool $isRepeaterLevel = false): void
     {
         $orderProductsPath = $isRepeaterLevel ? 'orderProducts' : '../../orderProducts';
         $totalPath = $isRepeaterLevel ? 'total' : '../../total';
@@ -69,7 +68,7 @@ class OrderForm
                     ->schema([
                         Select::make('product_id')
                             ->label('Product')
-                            ->options(Product::pluck('name', 'id'))
+                            ->options(Product::select('id', 'name')->pluck('name', 'id'))
                             ->searchable()
                             ->searchDebounce(300)
                             ->loadingMessage('Loading products...')
@@ -84,7 +83,7 @@ class OrderForm
                                     $set('subtotal', $product->price);
                                 }
 
-                                self::handleTotal($get, $set);
+                                self::calculateFormTotal($get, $set);
                             }),
                         TextInput::make('quantity')
                             ->numeric()
@@ -95,7 +94,7 @@ class OrderForm
                                 $productPrice = (float) $get('product_price');
                                 $set('subtotal', $state * $productPrice);
 
-                                self::handleTotal($get, $set);
+                                self::calculateFormTotal($get, $set);
                             }),
                         TextInput::make('product_price')
                             ->readOnly()
@@ -113,7 +112,7 @@ class OrderForm
                     ->columnSpan('full')
                     ->required()
                     ->afterStateUpdated(function (callable $get, callable $set) {
-                        self::handleTotal($get, $set, true);
+                        self::calculateFormTotal($get, $set, true);
                     }),
 
             ]);
