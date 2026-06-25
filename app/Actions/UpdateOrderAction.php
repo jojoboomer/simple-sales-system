@@ -85,8 +85,10 @@ class UpdateOrderAction
 
     private function updateProductStock(Product $product, int $oldQty, int $newQty): void
     {
-        $product->increment('stock', $oldQty);
-        $product->decrement('stock', $newQty);
+        $diff = $newQty - $oldQty;
+
+        //$product->increment('stock', $oldQty);
+        $product->decrement('stock', $diff);
     }
 
     private function removeDeletedItems(
