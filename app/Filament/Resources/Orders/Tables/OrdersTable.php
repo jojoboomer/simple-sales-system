@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Orders\Tables;
 
 use App\Actions\DeleteOrderAction;
@@ -45,10 +44,11 @@ class OrdersTable
                     ->color(fn (OrderStatus $state) => $state->color()),
             ])
             ->filters([
-                TernaryFilter::make('orders')
+                TernaryFilter::make('user_scope')
                     ->default(false)
+                    ->label('Owner')
                     ->trueLabel('All users')
-                    ->falseLabel('Mine')
+                    ->falseLabel('Me')
                     ->queries(
                         true: fn (Builder $query) => $query,
                         false: fn (Builder $query) => $query->where('user_id', auth()->id()),
@@ -69,7 +69,12 @@ class OrdersTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                app(DeleteOrderAction::class)->execute($record);
+                            }
+                        }),
                 ]),
             ]);
     }
