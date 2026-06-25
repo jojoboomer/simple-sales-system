@@ -52,6 +52,17 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->font('Inter')
+            ->brandName('SIMPLE POS')
+            ->favicon(asset('favicon.png'))
+            ->colors([
+                'danger' => Color::Red,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'primary' => Color::Indigo,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+            ]);;
     }
 }
