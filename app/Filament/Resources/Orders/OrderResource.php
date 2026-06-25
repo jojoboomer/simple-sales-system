@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Orders;
 
 use App\Filament\Resources\Orders\Pages\CreateOrder;

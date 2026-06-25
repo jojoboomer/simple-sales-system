@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Orders\Pages;
 
 use App\Actions\UpdateOrderAction;
@@ -16,6 +15,8 @@ use Override;
 
 class EditOrder extends EditRecord
 {
+    protected static ?string $title = 'Edit Order';
+
     protected static string $resource = OrderResource::class;
 
     protected ?bool $hasDatabaseTransactions = true;
@@ -36,15 +37,16 @@ class EditOrder extends EditRecord
     public function getSubheading(): ?HtmlString
     {
         $total = $this->data['total'] ?? 0;
+        $formatted = e(number_format((float) $total, 2));
 
         return new HtmlString("
             <div class='flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 mt-1'>
                 <span>Total amount:</span>
                 <span class='text-base font-bold text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50 px-2.5 py-0.5 rounded-full ring-1 ring-primary-600/10'>
-                    $".number_format((float) $total, 2).'
+                    \${$formatted}
                 </span>
             </div>
-        ');
+        ");
     }
 
     #[Override]

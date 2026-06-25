@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Enums\OrderStatus;

@@ -9,6 +9,8 @@ use Override;
 
 class EditProduct extends EditRecord
 {
+    protected static ?string $title = 'Edit Product';
+
     protected static string $resource = ProductResource::class;
 
     protected function getHeaderActions(): array

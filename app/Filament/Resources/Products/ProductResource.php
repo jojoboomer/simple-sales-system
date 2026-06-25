@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Products;
 
 use App\Filament\Resources\Products\Pages\CreateProduct;
