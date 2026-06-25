@@ -52,12 +52,12 @@ Acceder a `http://localhost:8000/admin`
 ## Arquitectura
 
 ```
-Filament Resource  →  Page  →  Service  →  Eloquent Model
+Filament Resource  →  Page  →  Action  →  Eloquent Model
 ```
 
 - **Resources**: capa delgada que delega en schemas/tables/pages.
-- **Pages**: orquestan el flujo e invocan servicios.
-- **Services**: lógica de negocio (ej: `InventoryService`, `OrderService`).
+- **Pages**: orquestan el flujo e invocan actions.
+- **Actions**: lógica de negocio.
 - **Models**: relaciones, casts y helpers simples — sin lógica de negocio.
 
 ## Módulos
